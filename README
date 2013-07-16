@@ -1,0 +1,19 @@
+
+yab - Yet another AMI Baker
+---------------------------
+
+A Java implementation of Netflix Aminator [1] (with improvements) 
+Project structure inspired from Denominator [2]
+
+[1] https://github.com/Netflix/aminator
+[2] https://github.com/Netflix/denominator
+
+Why? 
+----
+
+Because it would be nice to have a single executable file with no
+dependencies that can be used to bake custom private AMIs. 
+
+My objective is to design this also as a library that could be 
+integrated later on in Apache Provisionr (http://provisionr.incubator.apache.org/)
+

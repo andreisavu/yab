@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": "YAB", "Specification-Version": version, "Implementation-Version": version)
+    }
+}
+
+test {
+    useTestNG()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:14.0.1'
+    testCompile 'org.testng:testng:6.8.5'
+}
