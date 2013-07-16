@@ -15,6 +15,9 @@
  */
 package com.axemblr.yab.cli;
 
+/**
+ * Entry point for command line tool
+ */
 public class YaB {
 
     public static void main(String[] args) {

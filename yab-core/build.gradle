@@ -13,7 +13,7 @@ eclipse {
 
 jar {
     manifest {
-        attributes("Implementation-Title": "YAB", "Specification-Version": version, "Implementation-Version": version)
+        attributes("Implementation-Title": "YaB", "Specification-Version": version, "Implementation-Version": version)
     }
 }
 
@@ -23,5 +23,6 @@ test {
 
 dependencies {
     compile 'com.google.guava:guava:14.0.1'
+    compile 'com.amazonaws:aws-java-sdk:1.5.0'
     testCompile 'org.testng:testng:6.8.5'
 }
