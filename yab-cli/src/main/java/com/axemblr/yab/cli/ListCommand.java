@@ -15,13 +15,13 @@
  */
 package com.axemblr.yab.cli;
 
-/**
- * Entry point for command line tool
- */
-public class YaB {
+import io.airlift.command.Command;
 
-    public static void main(String[] args) {
-        System.err.println("Not implemented.");
+@Command(name = "list", description = "List existing custom baked AMIs")
+public class ListCommand implements Runnable {
+
+    @Override
+    public void run() {
+        System.err.println("List: not implemented");
     }
-
 }

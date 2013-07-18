@@ -39,8 +39,8 @@ task fatJar(dependsOn: classes, type: Jar) {
     // http://skife.org/java/unix/2011/06/20/really_executable_jars.html
 
     manifest {
-        attributes 'Main-Class': 'com.axemblr.yab.cli.YaB'
-        attributes("Implementation-Title": "YaB", "Specification-Version": version, "Implementation-Version": version)
+        attributes 'Main-Class': 'com.axemblr.yab.cli.YAB'
+        attributes("Implementation-Title": "YAB", "Specification-Version": version, "Implementation-Version": version)
     }
 
     // for convenience, we make a file in the build dir named yab with no extension
