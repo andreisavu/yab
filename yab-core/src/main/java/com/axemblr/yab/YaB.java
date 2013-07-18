@@ -16,11 +16,14 @@
 
 package com.axemblr.yab;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
+import com.amazonaws.services.ec2.model.DescribeRegionsResult;
 import com.amazonaws.services.ec2.model.Image;
+import com.amazonaws.services.ec2.model.Region;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 
@@ -42,6 +45,10 @@ public final class YaB {
         }
     }
 
+    public static YaB createWithEnvironmentCredentials() {
+        return createWithEnvironmentCredentials(Regions.DEFAULT_REGION.getName());
+    }
+
     /**
      * Constructs a new YaB client by fetching credentials in this order:
      * <p>
@@ -50,8 +57,24 @@ public final class YaB {
      * - Instance profile credentials delivered through the Amazon EC2 metadata service
      * </p>
      */
-    public static YaB createWithEnvironmentCredentials() {
-        return new YaB(new AmazonEC2Client());
+    public static YaB createWithEnvironmentCredentials(String region) {
+        AmazonEC2Client client = new AmazonEC2Client();
+
+        boolean regionFound = false;
+        DescribeRegionsResult result = client.describeRegions();
+        for (Region candidate : result.getRegions()) {
+            if (candidate.getRegionName().equals(region)) {
+                client.setEndpoint(candidate.getEndpoint());
+                regionFound = true;
+                break;
+            }
+        }
+
+        if (!regionFound) {
+            throw new IllegalArgumentException("No region found with this name: " + region);
+        }
+
+        return new YaB(client);
     }
 
     private final AmazonEC2 client;

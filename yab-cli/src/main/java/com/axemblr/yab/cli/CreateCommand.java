@@ -19,7 +19,7 @@ package com.axemblr.yab.cli;
 import io.airlift.command.Command;
 
 @Command(name = "create", description = "Bake a new AMI")
-public class CreateCommand implements Runnable {
+public class CreateCommand extends BaseCommand {
 
     @Override
     public void run() {

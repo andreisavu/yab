@@ -20,16 +20,21 @@ import com.axemblr.yab.YaB;
 import io.airlift.command.Command;
 
 @Command(name = "list", description = "List existing custom baked AMIs")
-public class ListCommand implements Runnable {
+public class ListCommand extends BaseCommand {
 
     @Override
     public void run() {
-        YaB yab = YaB.createWithEnvironmentCredentials();
+        YaB yab = YaB.createWithEnvironmentCredentials(getRegion());
 
         for (Image image : yab.describeBackedImages()) {
-            System.out.printf("%s:%s:%s - %s (%s)%n", image.getImageLocation(), image.getImageId(),
-                image.getImageType(), image.getName(), image.getDescription());
-            System.out.printf("tags: %s%n" + image.getTags());
+            System.out.printf("%s : %s : %s - %s (%s)%n",
+                image.getImageId(),
+                (image.getPublic() ? "public" : "private"),
+                image.getState(),
+                image.getName(),
+                image.getDescription()
+            );
+            System.out.printf(String.format("tags: %s%n", image.getTags()));
         }
     }
 }

@@ -16,13 +16,15 @@
 
 package com.axemblr.yab.cli;
 
-import io.airlift.command.Command;
+import com.amazonaws.regions.Regions;
+import io.airlift.command.Option;
 
-@Command(name = "drop", description = "Drop  an existing AMI")
-public class DropCommand extends BaseCommand {
+public abstract class BaseCommand implements Runnable {
 
-    @Override
-    public void run() {
-        System.err.println("Drop: not implemented");
+    @Option(name = {"-r", "--region"}, description = "Region name (default AWS SDK region)")
+    private String region = Regions.DEFAULT_REGION.getName();
+
+    public String getRegion() {
+        return region;
     }
 }
