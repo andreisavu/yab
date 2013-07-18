@@ -15,21 +15,33 @@
  */
 package com.axemblr.yab.cli;
 
+import com.axemblr.yab.YaB;
+import com.google.common.collect.ImmutableList;
 import io.airlift.command.Cli;
+import io.airlift.command.Command;
 import io.airlift.command.Help;
 
 /**
  * Entry point for command line tool
  */
-public class YAB {
+public class Main {
+
+    @Command(name = "version")
+    public static class VersionCommand implements Runnable {
+
+        @Override
+        public void run() {
+            System.out.println("YaB " + YaB.Version.INSTANCE);
+            System.out.println("Java " + System.getProperty("java.version"));
+        }
+    }
 
     public static void main(String[] args) {
         Cli.CliBuilder<Runnable> builder = Cli.<Runnable>builder("yab")
-            .withDescription("YAB: Yet (another) AMI Baker")
+            .withDescription("YaB: Yet (another) AMI Baker")
             .withDefaultCommand(Help.class)
-            .withCommand(ListCommand.class)
-            .withCommand(CreateCommand.class)
-            .withCommand(DropCommand.class);
+            .withCommands(ImmutableList.of(Help.class, ListCommand.class,
+                CreateCommand.class, DropCommand.class, VersionCommand.class));
 
         Cli<Runnable> parser = builder.build();
         try {

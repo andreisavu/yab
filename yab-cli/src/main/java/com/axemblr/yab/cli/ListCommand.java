@@ -15,6 +15,8 @@
  */
 package com.axemblr.yab.cli;
 
+import com.amazonaws.services.ec2.model.Image;
+import com.axemblr.yab.YaB;
 import io.airlift.command.Command;
 
 @Command(name = "list", description = "List existing custom baked AMIs")
@@ -22,6 +24,12 @@ public class ListCommand implements Runnable {
 
     @Override
     public void run() {
-        System.err.println("List: not implemented");
+        YaB yab = YaB.createWithEnvironmentCredentials();
+
+        for (Image image : yab.describeBackedImages()) {
+            System.out.printf("%s:%s:%s - %s (%s)%n", image.getImageLocation(), image.getImageId(),
+                image.getImageType(), image.getName(), image.getDescription());
+            System.out.printf("tags: %s%n" + image.getTags());
+        }
     }
 }
