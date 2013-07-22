@@ -26,15 +26,22 @@ public class ListCommand extends BaseCommand {
     public void run() {
         YaB yab = YaB.createWithEnvironmentCredentials(getRegion());
 
-        for (Image image : yab.describeBackedImages()) {
-            System.out.printf("%s : %s : %s - %s (%s)%n",
-                image.getImageId(),
-                (image.getPublic() ? "public" : "private"),
-                image.getState(),
-                image.getName(),
-                image.getDescription()
-            );
-            System.out.printf(String.format("tags: %s%n", image.getTags()));
+        try {
+            System.out.println(";; using region " + getRegion());
+
+            for (Image image : yab.describeBackedImages()) {
+                System.out.printf("%s : %s : %s - %s (%s)%n",
+                    image.getImageId(),
+                    (image.getPublic() ? "public" : "private"),
+                    image.getState(),
+                    image.getName(),
+                    image.getDescription()
+                );
+                System.out.printf(String.format("tags: %s%n", image.getTags()));
+            }
+
+        } finally {
+            yab.close();
         }
     }
 }

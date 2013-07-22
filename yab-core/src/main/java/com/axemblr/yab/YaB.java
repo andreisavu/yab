@@ -19,15 +19,26 @@ package com.axemblr.yab;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.DeleteSnapshotRequest;
+import com.amazonaws.services.ec2.model.DeregisterImageRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
 import com.amazonaws.services.ec2.model.DescribeRegionsResult;
+import com.amazonaws.services.ec2.model.DescribeSnapshotsRequest;
+import com.amazonaws.services.ec2.model.DescribeSnapshotsResult;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Region;
+import com.amazonaws.services.ec2.model.Snapshot;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.io.Closeable;
 import java.util.List;
 
-public final class YaB {
+public final class YaB implements Closeable {
+
+    /**
+     * Use the same default region as the AWS SDK
+     */
+    public static final String DEFAULT_REGION = Regions.DEFAULT_REGION.getName();
 
     public static enum Version {
         INSTANCE;
@@ -43,10 +54,6 @@ public final class YaB {
         public String toString() {
             return version;
         }
-    }
-
-    public static YaB createWithEnvironmentCredentials() {
-        return createWithEnvironmentCredentials(Regions.DEFAULT_REGION.getName());
     }
 
     /**
@@ -79,15 +86,42 @@ public final class YaB {
 
     private final AmazonEC2 client;
 
-    public YaB(AmazonEC2 client) {
+    YaB(AmazonEC2 client) {
         this.client = checkNotNull(client, "client is null");
     }
 
+    /**
+     * @return a list of (probably) backed images
+     */
     public List<Image> describeBackedImages() {
-        DescribeImagesResult result = client.describeImages(
-            new DescribeImagesRequest().withOwners("self"));
+        DescribeImagesRequest request = new DescribeImagesRequest().withOwners("self");
+        DescribeImagesResult result = client.describeImages(request);
 
         return result.getImages();
     }
 
+    /**
+     * De-register AMI and delete related snapshot
+     */
+    public void deleteImageAndRelatedSnapshot(String imageId) {
+        client.deregisterImage(new DeregisterImageRequest().withImageId(imageId));
+
+        final String pattern = "for " + imageId + " from vol-";
+        DescribeSnapshotsResult result = client.describeSnapshots(new DescribeSnapshotsRequest());
+
+        for (Snapshot candidate : result.getSnapshots()) {
+            if (candidate.getDescription().contains(pattern)) {
+                client.deleteSnapshot(new DeleteSnapshotRequest()
+                    .withSnapshotId(candidate.getSnapshotId()));
+            }
+        }
+    }
+
+    /**
+     * Close the underlying Amazon EC2 client
+     */
+    @Override
+    public void close() {
+        client.shutdown();
+    }
 }

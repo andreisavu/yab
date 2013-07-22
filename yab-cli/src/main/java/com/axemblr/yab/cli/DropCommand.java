@@ -16,13 +16,25 @@
 
 package com.axemblr.yab.cli;
 
+import com.axemblr.yab.YaB;
 import io.airlift.command.Command;
+import io.airlift.command.Option;
 
 @Command(name = "drop", description = "Drop  an existing AMI")
 public class DropCommand extends BaseCommand {
 
+    @Option(name = "--id", description = "Amazon Image ID")
+    private String imageId;
+
     @Override
     public void run() {
-        System.err.println("Drop: not implemented");
+        YaB yab = YaB.createWithEnvironmentCredentials(getRegion());
+        try {
+            System.out.println(";; using region " + getRegion());
+            yab.deleteImageAndRelatedSnapshot(imageId);
+
+        } finally {
+            yab.close();
+        }
     }
 }
