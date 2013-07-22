@@ -16,30 +16,13 @@
 
 package com.axemblr.yab.cli;
 
-import com.axemblr.yab.YaB;
-import io.airlift.command.Arguments;
 import io.airlift.command.Command;
-import java.util.List;
 
-@Command(name = "drop", description = "Drop  an existing AMI")
-public class DropCommand extends BaseCommand {
-
-    @Arguments(description = "A list of Amazon Image IDs")
-    private List<String> imageIds;
+@Command(name = "copy", description = "Copy an AMI from one region to another")
+public class CopyCommand extends BaseCommand {
 
     @Override
     public void run() {
-        YaB yab = YaB.createWithEnvironmentCredentials(getRegion());
-        try {
-            System.out.println(";; using region " + getRegion());
-
-            for (String imageId : imageIds) {
-                System.out.println(";; deleting " + imageId);
-                yab.deleteImageAndRelatedSnapshot(imageId);
-            }
-
-        } finally {
-            yab.close();
-        }
+        System.err.println("Copy: not implemented");
     }
 }

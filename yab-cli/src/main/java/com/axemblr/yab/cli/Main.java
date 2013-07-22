@@ -41,7 +41,8 @@ public class Main {
             .withDescription("YaB: Yet (another) AMI Baker")
             .withDefaultCommand(Help.class)
             .withCommands(ImmutableList.of(Help.class, ListCommand.class,
-                CreateCommand.class, DropCommand.class, VersionCommand.class));
+                CreateCommand.class, CopyCommand.class, DropCommand.class,
+                VersionCommand.class));
 
         Cli<Runnable> parser = builder.build();
         try {

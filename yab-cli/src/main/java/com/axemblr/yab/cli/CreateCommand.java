@@ -16,13 +16,33 @@
 
 package com.axemblr.yab.cli;
 
+import com.axemblr.yab.YaB;
+import io.airlift.command.Arguments;
 import io.airlift.command.Command;
+import io.airlift.command.Option;
+import java.util.Collections;
+import java.util.List;
 
-@Command(name = "create", description = "Bake a new AMI")
+@Command(name = "create", description = "Bake a new AMI from a list of templates")
 public class CreateCommand extends BaseCommand {
+
+    @Option(name = "-b", description = "Override base AMI ID from templates")
+    private String baseImageId;
+
+    @Arguments(description = "Paths to one or multiple template files")
+    private List<String> templates = Collections.emptyList();
 
     @Override
     public void run() {
-        System.err.println("Create: not implemented");
+        YaB yab = YaB.createWithEnvironmentCredentials(getRegion());
+
+        try {
+            System.out.println(";; using region " + getRegion());
+            // TODO: load all templates, merge & validate
+
+
+        } finally {
+            yab.close();
+        }
     }
 }
